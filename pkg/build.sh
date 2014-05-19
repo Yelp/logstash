@@ -23,7 +23,7 @@ release=$2
 
 echo "Building package for $os $release"
 
-destdir=build/$(echo "$os" | tr ' ' '_')
+destdir=build/$(echo "$os" | tr ' ' '_')-$release
 prefix=/opt/logstash
 
 if [ "$destdir/$prefix" != "/" -a -d "$destdir/$prefix" ] ; then
@@ -61,7 +61,9 @@ case $os@$release in
   ubuntu@*|debian@*)
     mkdir -p $destdir/etc/logstash/conf.d
     mkdir -p $destdir/etc/logrotate.d
-    mkdir -p $destdir/etc/init
+    if [[ "$release" > "10.04" ]]; then
+        mkdir -p $destdir/etc/init
+    fi
     mkdir -p $destdir/etc/init.d
     mkdir -p $destdir/var/lib/logstash
     mkdir -p $destdir/var/log/logstash
@@ -69,11 +71,16 @@ case $os@$release in
     touch $destdir/etc/default/logstash
     install -m644 logrotate.conf $destdir/etc/logrotate.d/logstash
     install -m644 logstash.default $destdir/etc/default/logstash
-    install -m755 logstash.upstart.ubuntu $destdir/etc/init/logstash.conf
-    install -m755 logstash.sysv $destdir/etc/init.d/logstash
     install -m644 logstash-web.default $destdir/etc/default/logstash-web
-    install -m755 logstash-web.upstart.ubuntu $destdir/etc/init/logstash-web.conf
-    install -m755 logstash-web.sysv $destdir/etc/init.d/logstash-web
+    if [[ "$release" > "10.04" ]]; then
+        install -m755 logstash.sysv $destdir/etc/init.d/logstash
+        install -m755 logstash-web.sysv $destdir/etc/init.d/logstash-web
+        install -m755 logstash.upstart.ubuntu $destdir/etc/init/logstash.conf
+        install -m755 logstash-web.upstart.ubuntu $destdir/etc/init/logstash-web.conf
+    else
+        install -m755 logstash.sysv.lucid $destdir/etc/init.d/logstash
+        install -m755 logstash-web.sysv.lucid $destdir/etc/init.d/logstash-web
+    fi
     ;;
   *) 
     echo "Unknown OS: $os $release"
