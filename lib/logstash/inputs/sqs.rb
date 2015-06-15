@@ -99,12 +99,12 @@ class LogStash::Inputs::SQS < LogStash::Inputs::Threadable
         @logger.debug("Connecting to AWS SQS queue '#{@queue_url}'...")
         @sqs_queue = @sqs.queues[@queue_url]
       else
-        @logger.debug("Connecting to AWS SQS queue", :queue => @queue)
+        @logger.debug("Connecting to AWS SQS queue '#{@queue}'...")
         @sqs_queue = @sqs.queues.named(@queue)
       end
-      @logger.info("Connected to AWS SQS queue successfully.", :queue => @queue)
+      @logger.info("Connected to AWS SQS queue '#{@queue}' successfully.")
     rescue Exception => e
-      @logger.error("Unable to access SQS queue.", :error => e.to_s, :queue => @queue)
+      @logger.error("Unable to access SQS queue '#{@queue}': #{e.to_s}")
       throw e
     end # begin/rescue
   end # def register
