@@ -21,7 +21,7 @@ require "digest/sha2"
 #  * Setup an SQS queue
 #  * Create an identify that has access to publish messages to the queue.
 #
-# The "consumer" identity must have the following permissions on the queue:
+# The "producer" identity must have the following permissions on the queue:
 #
 #  * sqs:ChangeMessageVisibility
 #  * sqs:ChangeMessageVisibilityBatch
@@ -41,12 +41,11 @@ require "digest/sha2"
 #            "Action": [
 #              "sqs:ChangeMessageVisibility",
 #              "sqs:ChangeMessageVisibilityBatch",
-#              "sqs:DeleteMessage",
-#              "sqs:DeleteMessageBatch",
 #              "sqs:GetQueueAttributes",
 #              "sqs:GetQueueUrl",
 #              "sqs:ListQueues",
-#              "sqs:ReceiveMessage"
+#              "sqs:SendMessage",
+#              "sqs:SendMessageBatch"
 #            ],
 #            "Effect": "Allow",
 #            "Resource": [
@@ -67,6 +66,10 @@ class LogStash::Outputs::SQS < LogStash::Outputs::Base
 
   # Name of SQS queue to push messages into. Note that this is just the name of the queue, not the URL or ARN.
   config :queue, :validate => :string, :required => true
+
+  # URL of the SQS queue to push messages into. This is the full url, e.g. https://sqs.us-west-1.amazonaws.com/111111111111/my_queue.
+  # This has higher precedence than the "queue" (name) parameter, and is useful for cross-account SQS access.
+  config :queue_url, :validate => :string
 
   # Set to true if you want send messages to SQS in batches with batch_send
   # from the amazon sdk
@@ -109,9 +112,14 @@ class LogStash::Outputs::SQS < LogStash::Outputs::Base
     end
 
     begin
-      @logger.debug("Connecting to AWS SQS queue '#{@queue}'...")
-      @sqs_queue = @sqs.queues.named(@queue)
-      @logger.info("Connected to AWS SQS queue '#{@queue}' successfully.")
+      if @queue_url
+        @logger.debug("Connecting to AWS SQS queue '#{@queue_url}'...")
+        @sqs_queue = @sqs.queues[@queue_url]
+      else
+        @logger.debug("Connecting to AWS SQS queue '#{@queue}'...")
+        @sqs_queue = @sqs.queues.named(@queue)
+      end
+    @logger.info("Connected to AWS SQS queue '#{@queue}' successfully.")
     rescue Exception => e
       @logger.error("Unable to access SQS queue '#{@queue}': #{e.to_s}")
     end # begin/rescue
