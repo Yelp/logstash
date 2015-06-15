@@ -68,7 +68,7 @@ class LogStash::Inputs::SQS < LogStash::Inputs::Threadable
   config :queue, :validate => :string, :required => true
 
   # URL of the SQS queue to pull messages from. This is the full url, e.g. https://sqs.us-west-1.amazonaws.com/111111111111/my_queue.
-  # This has higher precedence than the "queue" (name) parameter.
+  # This has higher precedence than the "queue" (name) parameter, and is useful for cross-account SQS access.
   config :queue_url, :validate => :string
 
   # Name of the event field in which to store the SQS message ID

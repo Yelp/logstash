@@ -68,7 +68,7 @@ class LogStash::Outputs::SQS < LogStash::Outputs::Base
   config :queue, :validate => :string, :required => true
 
   # URL of the SQS queue to push messages into. This is the full url, e.g. https://sqs.us-west-1.amazonaws.com/111111111111/my_queue.
-  # This has higher precedence than the "queue" (name) parameter.
+  # This has higher precedence than the "queue" (name) parameter, and is useful for cross-account SQS access.
   config :queue_url, :validate => :string
 
   # Set to true if you want send messages to SQS in batches with batch_send
