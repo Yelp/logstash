@@ -67,6 +67,10 @@ class LogStash::Inputs::SQS < LogStash::Inputs::Threadable
   # Name of the SQS Queue name to pull messages from. Note that this is just the name of the queue, not the URL or ARN.
   config :queue, :validate => :string, :required => true
 
+  # URL of the SQS queue to push messages into. This is the full url, e.g. https://sqs.us-west-1.amazonaws.com/111111111111/my_queue.
+  # If this is used, it overwrites the "queue" (name) parameter.
+  config :queue_url, :validate => :string
+
   # Name of the event field in which to store the SQS message ID
   config :id_field, :validate => :string
 
@@ -91,8 +95,13 @@ class LogStash::Inputs::SQS < LogStash::Inputs::Threadable
     @sqs = AWS::SQS.new(aws_options_hash)
 
     begin
-      @logger.debug("Connecting to AWS SQS queue", :queue => @queue)
-      @sqs_queue = @sqs.queues.named(@queue)
+      if @queue_url
+        @logger.debug("Connecting to AWS SQS queue '#{@queue_url}'...")
+        @sqs_queue = @sqs.queues[@queue_url]
+      else
+        @logger.debug("Connecting to AWS SQS queue", :queue => @queue)
+        @sqs_queue = @sqs.queues.named(@queue)
+      end
       @logger.info("Connected to AWS SQS queue successfully.", :queue => @queue)
     rescue Exception => e
       @logger.error("Unable to access SQS queue.", :error => e.to_s, :queue => @queue)
