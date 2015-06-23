@@ -40,11 +40,12 @@ require "digest/sha2"
 #           "Action": [
 #             "sqs:ChangeMessageVisibility",
 #             "sqs:ChangeMessageVisibilityBatch",
+#             "sqs:DeleteMessage",
+#             "sqs:DeleteMessageBatch",
 #             "sqs:GetQueueAttributes",
 #             "sqs:GetQueueUrl",
 #             "sqs:ListQueues",
-#             "sqs:SendMessage",
-#             "sqs:SendMessageBatch"
+#             "sqs:ReceiveMessage"
 #           ],
 #           "Effect": "Allow",
 #           "Resource": [
