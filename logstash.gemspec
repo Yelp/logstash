@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "i18n", [">=0.6.6"]  #(MIT license)
 
   # Web dependencies
-  gem.add_runtime_dependency "ftw", ["~> 0.0.39"] #(Apache 2.0 license)
+  gem.add_runtime_dependency "ftw", ["~> 0.0.42"] #(Apache 2.0 license)
   gem.add_runtime_dependency "mime-types"         #(GPL 2.0)
   gem.add_runtime_dependency "rack"               # (MIT-style license)
   gem.add_runtime_dependency "sinatra"            # (MIT-style license)
@@ -49,7 +49,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "statsd-ruby", ["1.2.0"]           #(MIT license)
   gem.add_runtime_dependency "xml-simple"                       #(ruby license?)
   gem.add_runtime_dependency "xmpp4r", ["0.5"]                  #(ruby license)
-  gem.add_runtime_dependency "jls-lumberjack", [">=0.0.20"]     #(Apache 2.0 license)
+  gem.add_runtime_dependency "jls-lumberjack", [">=0.0.22"]     #(Apache 2.0 license)
   gem.add_runtime_dependency "geoip", [">= 1.3.2"]              #(GPL license)
   gem.add_runtime_dependency "beefcake", "0.3.7"                #(MIT license)
   gem.add_runtime_dependency "murmurhash3"                      #(MIT license)
@@ -58,7 +58,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "snmp"                             #(ruby license)
   gem.add_runtime_dependency "rbnacl"                           #(MIT license)
   gem.add_runtime_dependency "bindata", [">= 1.5.0"]            #(ruby license)
-  gem.add_runtime_dependency "twitter", "5.0.0.rc.1"            #(MIT license)
+  gem.add_runtime_dependency "twitter", "5.11.0"            #(MIT license)
   gem.add_runtime_dependency "edn"                              #(MIT license)
   gem.add_runtime_dependency "elasticsearch"                    #9Apache 2.0 license)
 
